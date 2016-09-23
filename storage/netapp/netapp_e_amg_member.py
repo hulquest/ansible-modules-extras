@@ -105,6 +105,11 @@ tasks:
       when: set_amg_member
 
 """
+RETURN = """
+msg = 'Mirror pair did not exist.'
+msg = 'Mirror pair deleted. Primary[primvaryVolName]. Target[targetVolName]'
+Json facts are returned when the mirror pair is created.
+"""
 HEADERS = {
     "Content-Type": "application/json",
     "Accept": "application/json",
