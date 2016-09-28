@@ -259,6 +259,26 @@ def poll_activation_status(module):
         return {'status': 'timeout-continue'}
 
 
+def running_as_proxy(module):
+    """Determine if the deployment is a proxy."""
+    params = module.params
+    url = params['api_url']
+    utils = url.replace('v2', 'utils/about')
+    try:
+        (rc, resp) = request(utils, ignore_errors=True, url_username=params['api_username'],
+                             url_password=params['api_password'], headers=HEADERS,
+                             validate_certs=params['validate_certs'])
+        if 'runningAsProxy' in resp:
+            proxy = resp['runningAsProxy']
+            return proxy is True
+        else:
+            return False
+    except:
+        err = get_exception()
+        module.fail_json(
+            msg="Failed to validate proxy deployment. Error[%s]" % err.message)
+
+
 def get_firmware_version(module):
     """Get the firmware version for the storage array."""
     params = module.params
@@ -311,6 +331,25 @@ def activate_firmware(module):
 
 
 def main():
+    import sys
+    if "--interactive" in sys.argv:
+        import ansible.module_utils.basic
+        ansible.module_utils.basic._ANSIBLE_ARGS = json.dumps(dict(
+            ANSIBLE_MODULE_ARGS=dict(
+                ssid="ansible1",
+                firmware_to_upload="/home/khulques/Downloads/08.25/RC_08250800_e10_825_5501.dlp",
+                required_version='08.25.08.00',
+                # firmware_to_upload="/home/khulques/Downloads/08.20/RC_08202000_e10_820_5501.dlp",
+                # required_version='08.20.20.00',
+                version_not_present_action='upgrade',
+                expiration_action='fail',
+                expiration_time=10,
+                api_username='rw',
+                api_password='rw',
+                api_url='http://10.251.230.29/devmgr/v2'
+            )
+        ))
+
     argument_spec = basic_auth_argument_spec()
     argument_spec.update(
         ssid=dict(required=True, type='str'),
@@ -334,6 +373,9 @@ def main():
 
     if not params['api_url'].endswith('/'):
         params['api_url'] += '/'
+
+    if not running_as_proxy(module):
+        module.exit_json(msg='The module only supports proxy deployment.')
 
     version_before = get_firmware_version(module)
     required_version = params['required_version']
@@ -375,7 +417,6 @@ def main():
             module.exit_json(
                 msg='Firmware does not meet requirement but proceeding because of parameter configuration. Id[%s].' %
                     params['ssid'], present_version=version_before)
-
 
 
 if __name__ == '__main__':
