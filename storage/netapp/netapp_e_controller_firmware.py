@@ -331,25 +331,6 @@ def activate_firmware(module):
 
 
 def main():
-    import sys
-    if "--interactive" in sys.argv:
-        import ansible.module_utils.basic
-        ansible.module_utils.basic._ANSIBLE_ARGS = json.dumps(dict(
-            ANSIBLE_MODULE_ARGS=dict(
-                ssid="ansible1",
-                firmware_to_upload="/home/khulques/Downloads/08.25/RC_08250800_e10_825_5501.dlp",
-                required_version='08.25.08.00',
-                # firmware_to_upload="/home/khulques/Downloads/08.20/RC_08202000_e10_820_5501.dlp",
-                # required_version='08.20.20.00',
-                version_not_present_action='upgrade',
-                expiration_action='fail',
-                expiration_time=10,
-                api_username='rw',
-                api_password='rw',
-                api_url='http://10.251.230.29/devmgr/v2'
-            )
-        ))
-
     argument_spec = basic_auth_argument_spec()
     argument_spec.update(
         ssid=dict(required=True, type='str'),
