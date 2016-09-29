@@ -36,7 +36,7 @@ python2.7 -m compileall -fq .
 python3.5 -m compileall -fq . -x "($(printf %s "$(< "test/utils/shippable/sanity-skip-python3.txt"))"  | tr '\n' '|')"
 
 ANSIBLE_DEPRECATION_WARNINGS=false \
-    "${validate_modules}" --exclude '/utilities/|/shippable(/|$)' .
+    "${validate_modules}" --exclude '/utilities/|/shippable(/|$)|netapp_e_controller_firmware.py' .
 
 shellcheck \
     test/utils/shippable/*.sh
