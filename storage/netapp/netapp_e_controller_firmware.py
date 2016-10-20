@@ -38,7 +38,7 @@ description: >
     minutes passes.  10 minutes is a safe duration of time that will allow the E/EF platform to install the firmware to
     the redundant systems in the storage enclosure.  While I/Os will continue to be serviced during the upgrade it is
     better to schedule firmware upgrades at a times other than peak IO workloads.
-version_added: '2.2'
+version_added: '2.3'
 dependency: >
     - Requires python module requests.  This module makes HTTP POST calls with file input which requires a more robust
     HTTP library.
