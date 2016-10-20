@@ -25,7 +25,7 @@ description:
     - Allows for the addition or removal of members to asynchronous mirror groups for NetApp E-series storage arrays.
     - Use the name of the volume names for the mirrored pair.  Object ids are not required.
     - The size of the target volume must be of equal or greater capacity.
-version_added: '2.2'
+version_added: '2.3'
 author: Kevin Hulquest (@hulquest)
 options:
     api_username:
